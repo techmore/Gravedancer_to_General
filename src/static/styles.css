@@ -200,18 +200,6 @@ p { margin: 0 0 1em; }
 
 .home-main { min-width: 0; }
 
-.content-grid {
-  display: grid;
-  gap: 1.25rem;
-}
-
-@media (min-width: 1200px) {
-  .content-grid {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
 .hero-shell {
   display: grid;
   gap: 1rem;

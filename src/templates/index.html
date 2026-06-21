@@ -44,103 +44,101 @@
       </div>
     </section>
 
-    <div class="content-grid">
-      <section class="section-block section-anchor content-main" id="current-story">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">Recent story</p>
-            <h2 class="section-title">Current Episode</h2>
+    <section class="section-block section-anchor" id="current-story">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Recent story</p>
+          <h2 class="section-title">Current Episode</h2>
+        </div>
+        {% if latest %}<p class="section-note">We can feature the active episode here as the main entry point for readers.</p>{% endif %}
+      </div>
+
+      {% if latest %}
+      <div class="story-grid">
+        <article class="story-panel current-episode">
+          <p class="eyebrow">Episode {{ latest.episode }}</p>
+          <h3><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h3>
+          <p class="latest-tagline">{{ latest.tagline }}</p>
+          <p>Target: <strong>{{ latest.target_jedi }}</strong></p>
+          <p>Setting: <strong>{{ latest.setting }}</strong></p>
+          <p>{{ latest.reading_time }} · {{ "{:,}".format(latest.word_count) }} words</p>
+          <div class="hero-actions">
+            <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Open episode</a>
+            <a class="btn btn-outline" href="#episode-archive">View pass episodes</a>
           </div>
-          {% if latest %}<p class="section-note">We can feature the active episode here as the main entry point for readers.</p>{% endif %}
+        </article>
+
+        <aside class="media-panel" aria-label="Visual slots">
+          <div class="media-slot banner">General Grievous banner placeholder</div>
+          <div class="media-slot tall"></div>
+          <div class="media-slot wide"></div>
+        </aside>
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="section-block section-anchor archive" id="episode-archive" aria-label="Episode archive">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Archive</p>
+          <h2 class="section-title">Pass Episodes</h2>
         </div>
+        <p class="section-note">The archive can hold multiple art slots and clearer episode cards so the page breathes more.</p>
+      </div>
 
-        {% if latest %}
-        <div class="story-grid">
-          <article class="story-panel current-episode">
-            <p class="eyebrow">Episode {{ latest.episode }}</p>
-            <h3><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h3>
-            <p class="latest-tagline">{{ latest.tagline }}</p>
-            <p>Target: <strong>{{ latest.target_jedi }}</strong></p>
-            <p>Setting: <strong>{{ latest.setting }}</strong></p>
-            <p>{{ latest.reading_time }} · {{ "{:,}".format(latest.word_count) }} words</p>
-            <div class="hero-actions">
-              <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Open episode</a>
-              <a class="btn btn-outline" href="#episode-archive">View pass episodes</a>
-            </div>
-          </article>
-
-          <aside class="media-panel" aria-label="Visual slots">
-            <div class="media-slot banner">General Grievous banner placeholder</div>
-            <div class="media-slot tall"></div>
-            <div class="media-slot wide"></div>
-          </aside>
+      <div class="archive-controls">
+        <div class="filters">
+          <label class="filter">
+            <span class="filter-label">Status</span>
+            <select id="filter-status" data-filter="status">
+              <option value="all">All</option>
+              <option value="published">Published</option>
+              <option value="coming_soon">Coming soon</option>
+            </select>
+          </label>
+          <label class="filter">
+            <span class="filter-label">Jedi</span>
+            <select id="filter-jedi" data-filter="target_jedi">
+              <option value="all">All Jedi</option>
+            </select>
+          </label>
+          <label class="filter">
+            <span class="filter-label">Setting</span>
+            <select id="filter-setting" data-filter="setting">
+              <option value="all">All settings</option>
+            </select>
+          </label>
         </div>
-        {% endif %}
-      </section>
-
-      <section class="section-block section-anchor archive content-rail" id="episode-archive" aria-label="Episode archive">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">Archive</p>
-            <h2 class="section-title">Pass Episodes</h2>
+      </div>
+      <ul class="episode-list" id="episode-list">
+        {% for ep in episodes %}
+        <li class="episode-card"
+            data-status="{{ ep.status }}"
+            data-jedi="{{ ep.target_jedi }}"
+            data-setting="{{ ep.setting }}">
+          <div class="episode-card__media {% if loop.index0 % 3 == 0 %}tall{% elif loop.index0 % 3 == 1 %}duo{% endif %}"></div>
+          <div class="card-head">
+            <span class="card-num">Episode {{ ep.episode }}</span>
+            <span class="{{ ep.status | attrs }}">{{ ep.status | status_label }}</span>
           </div>
-          <p class="section-note">The archive can hold multiple art slots and clearer episode cards so the page breathes more.</p>
-        </div>
+          <h3 class="card-title">
+            <a href="{{ site.base_url }}/episodes/{{ ep.slug }}.html">{{ ep.title }}</a>
+          </h3>
+          <p class="card-tagline">{{ ep.tagline }}</p>
+          <dl class="card-meta">
+            <div><dt>Target</dt><dd>{{ ep.target_jedi }}</dd></div>
+            <div><dt>Setting</dt><dd>{{ ep.setting }}</dd></div>
+            <div><dt>Length</dt><dd>{{ "{:,}".format(ep.word_count) }} words · {{ ep.reading_time }}</dd></div>
+            <div><dt>Days</dt><dd>{{ ep.num_days }}</dd></div>
+            {% if ep.date_long %}<div><dt>Published</dt><dd>{{ ep.date_long }}</dd></div>{% endif %}
+          </dl>
+          <span class="read-marker" data-read-slug="{{ ep.slug }}" aria-label="Read status" title="Read"></span>
+        </li>
+        {% endfor %}
+      </ul>
 
-        <div class="archive-controls">
-          <div class="filters">
-            <label class="filter">
-              <span class="filter-label">Status</span>
-              <select id="filter-status" data-filter="status">
-                <option value="all">All</option>
-                <option value="published">Published</option>
-                <option value="coming_soon">Coming soon</option>
-              </select>
-            </label>
-            <label class="filter">
-              <span class="filter-label">Jedi</span>
-              <select id="filter-jedi" data-filter="target_jedi">
-                <option value="all">All Jedi</option>
-              </select>
-            </label>
-            <label class="filter">
-              <span class="filter-label">Setting</span>
-              <select id="filter-setting" data-filter="setting">
-                <option value="all">All settings</option>
-              </select>
-            </label>
-          </div>
-        </div>
-        <ul class="episode-list" id="episode-list">
-          {% for ep in episodes %}
-          <li class="episode-card"
-              data-status="{{ ep.status }}"
-              data-jedi="{{ ep.target_jedi }}"
-              data-setting="{{ ep.setting }}">
-            <div class="episode-card__media {% if loop.index0 % 3 == 0 %}tall{% elif loop.index0 % 3 == 1 %}duo{% endif %}"></div>
-            <div class="card-head">
-              <span class="card-num">Episode {{ ep.episode }}</span>
-              <span class="{{ ep.status | attrs }}">{{ ep.status | status_label }}</span>
-            </div>
-            <h3 class="card-title">
-              <a href="{{ site.base_url }}/episodes/{{ ep.slug }}.html">{{ ep.title }}</a>
-            </h3>
-            <p class="card-tagline">{{ ep.tagline }}</p>
-            <dl class="card-meta">
-              <div><dt>Target</dt><dd>{{ ep.target_jedi }}</dd></div>
-              <div><dt>Setting</dt><dd>{{ ep.setting }}</dd></div>
-              <div><dt>Length</dt><dd>{{ "{:,}".format(ep.word_count) }} words · {{ ep.reading_time }}</dd></div>
-              <div><dt>Days</dt><dd>{{ ep.num_days }}</dd></div>
-              {% if ep.date_long %}<div><dt>Published</dt><dd>{{ ep.date_long }}</dd></div>{% endif %}
-            </dl>
-            <span class="read-marker" data-read-slug="{{ ep.slug }}" aria-label="Read status" title="Read"></span>
-          </li>
-          {% endfor %}
-        </ul>
-
-        <p class="archive-empty" id="archive-empty" hidden>No episodes match these filters.</p>
-      </section>
-    </div>
+      <p class="archive-empty" id="archive-empty" hidden>No episodes match these filters.</p>
+    </section>
 
     <section class="section-block section-anchor" id="coming-soon">
       <div class="section-header">
