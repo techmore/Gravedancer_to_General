@@ -134,7 +134,7 @@ p { margin: 0 0 1em; }
 }
 
 @media (min-width: 1024px) {
-  .home-layout { grid-template-columns: 260px minmax(0, 1fr); }
+  .home-layout { grid-template-columns: 280px minmax(0, 1fr); }
 }
 
 .home-nav {
@@ -200,13 +200,31 @@ p { margin: 0 0 1em; }
 
 .home-main { min-width: 0; }
 
+.content-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1200px) {
+  .content-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(360px, 0.85fr);
+    grid-template-areas:
+      "story archive"
+      "story aside";
+    align-items: start;
+  }
+  .content-main { grid-area: story; }
+  .content-rail { grid-area: archive; }
+  .content-aside { grid-area: aside; }
+}
+
 .hero-shell {
   display: grid;
   gap: 1rem;
   margin: 1.25rem 0 1rem;
 }
 @media (min-width: 768px) {
-  .hero-shell { grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr); align-items: stretch; }
+  .hero-shell { grid-template-columns: minmax(0, 0.95fr) minmax(460px, 1.05fr); align-items: stretch; }
 }
 
 .hero-panel,
@@ -290,7 +308,7 @@ p { margin: 0 0 1em; }
   gap: 0.9rem;
 }
 .banner-visual__art {
-  min-height: 320px;
+  min-height: 380px;
   border-radius: 18px;
   border: 1px solid rgba(254,250,224,0.14);
   background:
@@ -383,7 +401,7 @@ p { margin: 0 0 1em; }
   gap: 1rem;
 }
 @media (min-width: 900px) {
-  .story-grid { grid-template-columns: minmax(0, 1fr) 420px; }
+  .story-grid { grid-template-columns: minmax(0, 1fr) 460px; }
 }
 .story-panel,
 .media-panel {
@@ -439,6 +457,20 @@ p { margin: 0 0 1em; }
   font-size: 1.6rem;
 }
 .current-episode p { color: var(--text-muted); }
+
+.content-aside .subscribe {
+  margin: 1rem 0 0;
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.content-aside .subscribe-links {
+  justify-content: flex-start;
+}
+
+.content-aside .section-title {
+  font-size: 1.2rem;
+}
 
 ::selection {
   background: var(--accent-dim);
@@ -727,7 +759,21 @@ select:focus, input:focus {
 @media (min-width: 1440px) {
   .home-layout { gap: 2rem; }
   .banner-panel { padding: 2rem; }
-  .story-grid { grid-template-columns: minmax(0, 1fr) 460px; }
+  .story-grid { grid-template-columns: minmax(0, 1fr) 480px; }
+}
+
+@media (min-width: 1680px) {
+  .banner-panel { min-height: 430px; }
+  .banner-grid { align-items: stretch; }
+  .banner-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem 0 1rem 0.5rem;
+  }
+  .content-grid {
+    grid-template-columns: minmax(0, 1.7fr) minmax(390px, 0.75fr);
+  }
 }
 
 .episode-card {
