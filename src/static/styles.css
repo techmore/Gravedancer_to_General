@@ -207,15 +207,9 @@ p { margin: 0 0 1em; }
 
 @media (min-width: 1200px) {
   .content-grid {
-    grid-template-columns: minmax(0, 1.5fr) minmax(360px, 0.85fr);
-    grid-template-areas:
-      "story archive"
-      "story aside";
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
   }
-  .content-main { grid-area: story; }
-  .content-rail { grid-area: archive; }
-  .content-aside { grid-area: aside; }
 }
 
 .hero-shell {
@@ -457,20 +451,6 @@ p { margin: 0 0 1em; }
   font-size: 1.6rem;
 }
 .current-episode p { color: var(--text-muted); }
-
-.content-aside .subscribe {
-  margin: 1rem 0 0;
-  padding: 1.5rem;
-  text-align: left;
-}
-
-.content-aside .subscribe-links {
-  justify-content: flex-start;
-}
-
-.content-aside .section-title {
-  font-size: 1.2rem;
-}
 
 ::selection {
   background: var(--accent-dim);
