@@ -30,11 +30,16 @@
           </div>
         </div>
 
-        <div class="banner-meta" aria-label="Series stats">
-          <div class="banner-chip"><strong>{{ published | length }}</strong><span>published episodes</span></div>
-          <div class="banner-chip"><strong>{{ coming_soon | length }}</strong><span>coming soon</span></div>
-          <div class="banner-chip"><strong>{{ jedi_count }}</strong><span>Jedi catalogued</span></div>
-          <div class="banner-chip"><strong>{{ episodes | length }}</strong><span>total entries</span></div>
+        <div class="banner-visual" aria-label="Hero image slot">
+          <div class="banner-visual__art">
+            <span class="banner-visual__tag">Hero banner space</span>
+          </div>
+          <div class="banner-meta" aria-label="Series stats">
+            <div class="banner-chip"><strong>{{ published | length }}</strong><span>published episodes</span></div>
+            <div class="banner-chip"><strong>{{ coming_soon | length }}</strong><span>coming soon</span></div>
+            <div class="banner-chip"><strong>{{ jedi_count }}</strong><span>Jedi catalogued</span></div>
+            <div class="banner-chip"><strong>{{ episodes | length }}</strong><span>total entries</span></div>
+          </div>
         </div>
       </div>
     </section>
@@ -64,6 +69,7 @@
         </article>
 
         <aside class="media-panel" aria-label="Visual slots">
+          <div class="media-slot banner">General Grievous banner placeholder</div>
           <div class="media-slot tall"></div>
           <div class="media-slot wide"></div>
         </aside>
