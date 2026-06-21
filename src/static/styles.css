@@ -10,18 +10,18 @@
 /* ── Design tokens ──────────────────────────────────────── */
 :root,
 :root[data-theme="dark"] {
-  --bg: #1a1a2e;
-  --bg-elev: #22223a;
-  --bg-card: #26263f;
-  --border: #34344f;
-  --border-subtle: rgba(52, 52, 79, 0.5);
-  --text: #e8e4d9;
-  --text-muted: #a8b088;        /* muted olive */
-  --text-dim: #8a8aa5;
-  --accent: #d4a373;            /* gold/amber */
-  --accent-strong: #e8b87f;
-  --accent-glow: rgba(212, 163, 115, 0.08);
-  --accent-dim: rgba(212, 163, 115, 0.18);
+  --bg: #0d0d18;
+  --bg-elev: #181828;
+  --bg-card: #181828;
+  --border: #242440;
+  --border-subtle: rgba(36, 36, 64, 0.5);
+  --text: #e6dcc4;
+  --text-muted: #7a8a74;
+  --text-dim: #7a7a92;
+  --accent: #c9953e;
+  --accent-strong: #dba85c;
+  --accent-glow: rgba(201, 149, 62, 0.08);
+  --accent-dim: rgba(201, 149, 62, 0.18);
   --danger: #c97064;
   --good: #7fa66a;
   --good-dim: rgba(127, 166, 106, 0.15);
@@ -79,14 +79,14 @@ body {
   text-rendering: optimizeLegibility;
   /* Subtle starfield/noise atmosphere — CSS-only, zero cost */
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.04) 0%, transparent 100%),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.03) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.04) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.03) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.04) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 5% 90%, rgba(255,255,255,0.02) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.03) 0%, transparent 100%),
-    radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.02) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.05) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.07) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.05) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 80%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 5% 90%, rgba(255,255,255,0.04) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 15%, rgba(255,255,255,0.05) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.04) 0%, transparent 100%),
     linear-gradient(var(--bg) 0%, var(--bg) 100%);
   background-attachment: fixed;
 }
@@ -149,7 +149,7 @@ p { margin: 0 0 1em; }
 /* ── Header ─────────────────────────────────────────────── */
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(26, 26, 46, 0.88);
+  background: rgba(13, 13, 24, 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
