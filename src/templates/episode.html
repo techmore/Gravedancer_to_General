@@ -62,7 +62,14 @@
       </label>
       <button class="btn btn-sm day-next" id="day-next" type="button" aria-label="Next day">Next →</button>
     </div>
-    <p class="day-progress" id="day-progress" aria-live="polite">Day 1 of {{ episode.days | length }}</p>
+    {% if episode.days | length > 1 %}
+    <ul class="day-dots" id="day-dots" aria-label="Day progress">
+      {% for day in episode.days %}
+      <li class="day-dot" data-day="{{ day.num }}" title="Day {{ day.num }}" role="button" tabindex="0"></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <p class="day-progress-text" id="day-progress" aria-live="polite">Day 1 of {{ episode.days | length }}</p>
   </div>
 
   <div class="prose" id="prose">
@@ -73,6 +80,8 @@
     </section>
     {% endfor %}
   </div>
+
+  <p class="episode-end" aria-hidden="true">End of Episode {{ episode.episode }}</p>
 
   <div class="reader-actions">
     <button class="btn btn-sm" id="mark-read" type="button">Mark episode as read</button>

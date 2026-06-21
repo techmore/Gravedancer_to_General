@@ -1,7 +1,8 @@
 /* Gravedancer to General — client-side behavior.
- * No frameworks, no tracking. Vanilla JS, ~3KB.
- * Handles: theme toggle, episode day navigation, archive filters,
- * read-tracking via localStorage, glossary search, mark-as-read.
+ * No frameworks, no tracking. Vanilla JS.
+ * Handles: theme toggle, hamburger menu, reading progress,
+ * episode day navigation, archive filters, read-tracking,
+ * glossary search, mark-as-read.
  */
 
 (function () {
@@ -9,7 +10,7 @@
 
   var STORAGE = {
     theme: "gd-theme",
-    read: "gd-read-episodes"  // JSON array of slugs
+    read: "gd-read-episodes"
   };
 
   function $(sel, root) { return (root || document).querySelector(sel); }
@@ -40,6 +41,46 @@
     });
   }
 
+  /* ── Hamburger menu ───────────────────────────────── */
+  function initHamburger() {
+    var hamburger = $("#hamburger");
+    var mobileNav = $("#mobile-nav");
+    if (!hamburger || !mobileNav) return;
+
+    hamburger.addEventListener("click", function () {
+      var isOpen = mobileNav.classList.toggle("is-open");
+      hamburger.classList.toggle("is-active");
+      hamburger.setAttribute("aria-label", isOpen ? "Close menu" : "Open menu");
+    });
+
+    // Close on link click
+    $all("a", mobileNav).forEach(function (link) {
+      link.addEventListener("click", function () {
+        mobileNav.classList.remove("is-open");
+        hamburger.classList.remove("is-active");
+        hamburger.setAttribute("aria-label", "Open menu");
+      });
+    });
+  }
+
+  /* ── Reading progress bar ─────────────────────────── */
+  function initReadingProgress() {
+    var bar = $("#reading-progress-bar");
+    if (!bar) return;
+
+    function update() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) { bar.style.width = "0%"; return; }
+      var pct = Math.min(100, (scrollTop / docHeight) * 100);
+      bar.style.width = pct + "%";
+    }
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+  }
+
   /* ── Archive: filters ─────────────────────────────── */
   function initArchiveFilters() {
     var list = $("#episode-list");
@@ -47,7 +88,6 @@
     var cards = $all(".episode-card", list);
     var empty = $("#archive-empty");
 
-    // Populate jedi + setting dropdowns from data attributes
     ["jedi", "setting"].forEach(function (key) {
       var select = $("#filter-" + key);
       if (!select) return;
@@ -82,7 +122,6 @@
       sel.addEventListener("change", applyFilters);
     });
 
-    // Reflect read state on cards
     cards.forEach(function (c) {
       var m = $(".read-marker", c);
       if (m && isRead(m.getAttribute("data-read-slug"))) {
@@ -106,6 +145,15 @@
     var next = $("#day-next");
     var progress = $("#day-progress");
     var markBtn = $("#mark-read");
+    var dots = $all(".day-dot");
+
+    function updateDots(n) {
+      dots.forEach(function (d) {
+        var dayNum = parseInt(d.getAttribute("data-day"), 10);
+        d.classList.remove("is-active");
+        if (dayNum === n) d.classList.add("is-active");
+      });
+    }
 
     function showDay(n, push) {
       n = Math.max(1, Math.min(total, n));
@@ -114,18 +162,19 @@
       });
       if (select) select.value = String(n);
       if (progress) progress.textContent = "Day " + n + " of " + total;
+      updateDots(n);
       if (prev) prev.disabled = (n === 1);
       if (next) next.disabled = (n === total);
       if (push && history.replaceState) {
         history.replaceState(null, "", "#day-" + n);
       }
-      // Auto-mark read when reaching the final day
       if (n === total && slug) {
         markRead(slug);
         reflectMarkBtn();
         reflectArchiveCard();
+        // Mark all dots as read
+        dots.forEach(function (d) { d.classList.add("is-read"); });
       }
-      // Scroll to top of prose on day change (but not on initial hash load)
       if (push) {
         var prose = $("#prose");
         if (prose) prose.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -147,6 +196,20 @@
     if (next) next.addEventListener("click", function () {
       showDay(currentDay() + 1, true);
     });
+
+    // Day dot clicks
+    dots.forEach(function (d) {
+      d.addEventListener("click", function () {
+        showDay(parseInt(d.getAttribute("data-day"), 10), true);
+      });
+      d.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          showDay(parseInt(d.getAttribute("data-day"), 10), true);
+        }
+      });
+    });
+
     window.addEventListener("hashchange", function () { showDay(currentDay(), false); });
 
     function reflectMarkBtn() {
@@ -171,14 +234,19 @@
       markRead(slug);
       reflectMarkBtn();
       reflectArchiveCard();
+      dots.forEach(function (d) { d.classList.add("is-read"); });
     });
 
-    // Keyboard nav: left/right between days
     document.addEventListener("keydown", function (e) {
       if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") return;
       if (e.key === "ArrowLeft") showDay(currentDay() - 1, true);
       else if (e.key === "ArrowRight") showDay(currentDay() + 1, true);
     });
+
+    // Mark read dots on init
+    if (isRead(slug)) {
+      dots.forEach(function (d) { d.classList.add("is-read"); });
+    }
 
     showDay(currentDay(), false);
     reflectMarkBtn();
@@ -205,6 +273,8 @@
   /* ── Boot ─────────────────────────────────────────── */
   document.addEventListener("DOMContentLoaded", function () {
     initTheme();
+    initHamburger();
+    initReadingProgress();
     initArchiveFilters();
     initReader();
     initGlossarySearch();
