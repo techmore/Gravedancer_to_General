@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Episode {{ episode.episode }}: {{ episode.title }} · {{ site.title }}{% endblock %}
+{% block description %}{{ episode.excerpt }}{% endblock %}
+
+{% block social_meta %}
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Episode {{ episode.episode }}: {{ episode.title }}">
+  <meta property="og:description" content="{{ episode.tagline }}">
+  <meta property="og:url" content="{{ site.base_url }}/episodes/{{ episode.slug }}.html">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="article:published_time" content="{{ episode.date_iso }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Episode {{ episode.episode }}: {{ episode.title }}">
+  <meta name="twitter:description" content="{{ episode.tagline }}">
+  {% if site.social.twitter %}
+  <meta name="twitter:creator" content="@{{ site.social.twitter }}">
+  {% endif %}
+  <meta property="og:image" content="{{ site.base_url }}/assets/og-image.svg">
+  <meta name="twitter:image" content="{{ site.base_url }}/assets/og-image.svg">
+{% endblock %}
+
+{% block content %}
+<article class="episode reader"
+         data-episode-slug="{{ episode.slug }}"
+         data-day-count="{{ episode.days | length }}"
+         id="episode">
+
+  <header class="episode-header">
+    <p class="episode-eyebrow">
+      <a href="{{ site.base_url }}/" class="back-link">← All episodes</a>
+      <span>Episode {{ episode.episode }}</span>
+    </p>
+    <h1 class="episode-title">{{ episode.title }}</h1>
+    <p class="episode-tagline">{{ episode.tagline }}</p>
+
+    <dl class="episode-meta">
+      <div><dt>Target Jedi</dt><dd>{{ episode.target_jedi }}</dd></div>
+      <div><dt>Setting</dt><dd>{{ episode.setting }}</dd></div>
+      <div><dt>Length</dt><dd>{{ "{:,}".format(episode.word_count) }} words</dd></div>
+      <div><dt>Reading time</dt><dd>{{ episode.reading_time }}</dd></div>
+      <div><dt>Days</dt><dd>{{ episode.days | length }}</dd></div>
+      {% if episode.date_long %}<div><dt>Published</dt><dd>{{ episode.date_long }}</dd></div>{% endif %}
+    </dl>
+
+    {% if episode.status == 'coming_soon' %}
+    <p class="coming-soon-notice">⚠ This episode is not yet published. Check back {{ episode.date_long or 'soon' }}.</p>
+    {% endif %}
+  </header>
+
+  {% if episode.status != 'coming_soon' %}
+  <div class="day-nav" id="day-nav">
+    <div class="day-nav-row">
+      <button class="btn btn-sm day-prev" id="day-prev" type="button" aria-label="Previous day">← Prev</button>
+      <label class="day-select-wrap">
+        <span class="sr-only">Jump to day</span>
+        <select id="day-select" class="day-select">
+          {% for day in episode.days %}
+          <option value="{{ day.num }}">Day {{ day.num }}: {{ day.title }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button class="btn btn-sm day-next" id="day-next" type="button" aria-label="Next day">Next →</button>
+    </div>
+    <p class="day-progress" id="day-progress" aria-live="polite">Day 1 of {{ episode.days | length }}</p>
+  </div>
+
+  <div class="prose" id="prose">
+    {% for day in episode.days %}
+    <section class="day {% if not loop.first %}is-hidden{% endif %}" id="day-{{ day.num }}" data-day="{{ day.num }}">
+      <h2 class="day-title">Day {{ day.num }}: {{ day.title }}</h2>
+      {{ day.html | safe }}
+    </section>
+    {% endfor %}
+  </div>
+
+  <div class="reader-actions">
+    <button class="btn btn-sm" id="mark-read" type="button">Mark episode as read</button>
+  </div>
+
+  <nav class="episode-footer-nav" aria-label="More episodes">
+    {% if prev_ep %}
+    <a class="ep-link ep-prev" href="{{ site.base_url }}/episodes/{{ prev_ep.slug }}.html">
+      <span class="ep-link-label">← Previous</span>
+      <span class="ep-link-title">Episode {{ prev_ep.episode }}: {{ prev_ep.title }}</span>
+    </a>
+    {% else %}
+    <span></span>
+    {% endif %}
+    {% if next_ep %}
+    <a class="ep-link ep-next" href="{{ site.base_url }}/episodes/{{ next_ep.slug }}.html">
+      <span class="ep-link-label">Next →</span>
+      <span class="ep-link-title">Episode {{ next_ep.episode }}: {{ next_ep.title }}</span>
+    </a>
+    {% else %}
+    <span></span>
+    {% endif %}
+  </nav>
+  {% endif %}
+</article>
+{% endblock %}

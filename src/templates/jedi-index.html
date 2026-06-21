@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Jedi Index · {{ site.title }}{% endblock %}
+{% block description %}Original Jedi characters introduced across the Gravedancer to General series.{% endblock %}
+
+{% block content %}
+<section class="lore-page">
+  <header class="page-header">
+    <p class="episode-eyebrow">Lore</p>
+    <h1>Jedi Index</h1>
+    <p class="muted">Every original Jedi who has crossed the Gravedancer's path, in order of appearance. Updated as new episodes publish.</p>
+  </header>
+
+  {% if jedi %}
+  <ul class="jedi-list">
+    {% for j in jedi %}
+    <li class="jedi-card">
+      <h2 class="jedi-name">{{ j.name }}</h2>
+      <dl class="jedi-meta">
+        <div><dt>Species</dt><dd>{{ j.species }}</dd></div>
+        <div><dt>Philosophy</dt><dd><em>"{{ j.philosophy }}"</em></dd></div>
+        <div><dt>Fate</dt><dd>{{ j.fate }}</dd></div>
+      </dl>
+      <p class="jedi-appearances">
+        Appears in:
+        {% for e in j.episodes %}
+        <a href="{{ site.base_url }}/episodes/{{ e.slug }}.html">Episode {{ e.episode }}</a>{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">No Jedi have been catalogued yet. Check back after the first episodes publish.</p>
+  {% endif %}
+</section>
+{% endblock %}

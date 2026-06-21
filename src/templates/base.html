@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {# Inline theme bootstrap prevents a flash of the wrong theme on load #}
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('gd-theme');
+        if (saved) {
+          document.documentElement.setAttribute('data-theme', saved);
+        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <title>{% block title %}{{ site.title }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ site.description }}{% endblock %}">
+
+  {% block social_meta %}{% endblock %}
+
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ site.base_url }}/feed.xml">
+  <link rel="sitemap" type="application/xml" href="{{ site.base_url }}/sitemap.xml">
+
+  {# Google Fonts: Lora (serif prose) + system sans for UI #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ site.base_url }}/static/styles.css">
+  <link rel="icon" href="{{ site.base_url }}/assets/favicon.svg" type="image/svg+xml">
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a href="{{ site.base_url }}/" class="brand">
+        <span class="brand-title">{{ site.title }}</span>
+        <span class="brand-sub">{{ site.subtitle }}</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Primary">
+        <a href="{{ site.base_url }}/" {% if nav_active=='archive' %}aria-current="page"{% endif %}>Episodes</a>
+        <a href="{{ site.base_url }}/jedi-index.html" {% if nav_active=='jedi' %}aria-current="page"{% endif %}>Jedi Index</a>
+        <a href="{{ site.base_url }}/glossary.html" {% if nav_active=='glossary' %}aria-current="page"{% endif %}>Glossary</a>
+        <a href="{{ site.base_url }}/about.html" {% if nav_active=='about' %}aria-current="page"{% endif %}>About</a>
+      </nav>
+
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme" type="button">
+        <span class="theme-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div class="footer-col">
+        <p class="footer-title">{{ site.title }} <span>· {{ site.subtitle }}</span></p>
+        <p class="footer-meta">A Star Wars fan fiction series by {{ site.author }}.</p>
+        <p class="footer-meta">Star Wars and all associated names are property of their respective owners. This is a non-commercial fan work.</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-title">Follow</p>
+        {% if site.social.rss %}<a href="{{ site.base_url }}{{ site.social.rss }}">RSS feed</a>{% endif %}
+        {% if site.social.twitter %}<a href="https://twitter.com/{{ site.social.twitter }}" rel="me">Twitter / X</a>{% endif %}
+        {% if site.social.github %}<a href="https://github.com/{{ site.social.github }}">GitHub</a>{% endif %}
+      </div>
+    </div>
+  </footer>
+
+  <script src="{{ site.base_url }}/static/app.js" defer></script>
+</body>
+</html>

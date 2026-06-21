@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site.title }} — {{ site.subtitle }} · A Star Wars fan fiction series{% endblock %}
+
+{% block content %}
+{% if latest %}
+<section class="latest-banner" aria-label="Latest episode">
+  <div class="latest-inner">
+    <span class="latest-eyebrow">Newest · Episode {{ latest.episode }}</span>
+    <h2 class="latest-title"><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h2>
+    <p class="latest-tagline">{{ latest.tagline }}</p>
+    <p class="latest-meta">
+      Target: <strong>{{ latest.target_jedi }}</strong> ·
+      {{ latest.setting }} ·
+      {{ latest.reading_time }}
+    </p>
+    <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Read Episode {{ latest.episode }} →</a>
+  </div>
+</section>
+{% endif %}
+
+<section class="archive" aria-label="Episode archive">
+  <div class="archive-controls">
+    <h1 class="section-title">Episodes</h1>
+    <div class="filters">
+      <label class="filter">
+        <span class="filter-label">Status</span>
+        <select id="filter-status" data-filter="status">
+          <option value="all">All</option>
+          <option value="published">Published</option>
+          <option value="coming_soon">Coming soon</option>
+        </select>
+      </label>
+      <label class="filter">
+        <span class="filter-label">Jedi</span>
+        <select id="filter-jedi" data-filter="target_jedi">
+          <option value="all">All Jedi</option>
+        </select>
+      </label>
+      <label class="filter">
+        <span class="filter-label">Setting</span>
+        <select id="filter-setting" data-filter="setting">
+          <option value="all">All settings</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <ul class="episode-list" id="episode-list">
+    {% for ep in episodes %}
+    <li class="episode-card"
+        data-status="{{ ep.status }}"
+        data-jedi="{{ ep.target_jedi }}"
+        data-setting="{{ ep.setting }}">
+      <div class="card-head">
+        <span class="card-num">EP {{ ep.episode }}</span>
+        <span class="{{ ep.status | attrs }}">·</span>
+        <span class="{{ ep.status | attrs }}">{{ ep.status | status_label }}</span>
+      </div>
+      <h3 class="card-title">
+        <a href="{{ site.base_url }}/episodes/{{ ep.slug }}.html">{{ ep.title }}</a>
+      </h3>
+      <p class="card-tagline">{{ ep.tagline }}</p>
+      <dl class="card-meta">
+        <div><dt>Target</dt><dd>{{ ep.target_jedi }}</dd></div>
+        <div><dt>Setting</dt><dd>{{ ep.setting }}</dd></div>
+        <div><dt>Length</dt><dd>{{ "{:,}".format(ep.word_count) }} words · {{ ep.reading_time }}</dd></div>
+        <div><dt>Days</dt><dd>{{ ep.num_days }}</dd></div>
+        {% if ep.date_long %}<div><dt>Published</dt><dd>{{ ep.date_long }}</dd></div>{% endif %}
+      </dl>
+      <span class="read-marker" data-read-slug="{{ ep.slug }}" aria-label="Read status" title="Read"></span>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <p class="archive-empty" id="archive-empty" hidden>No episodes match these filters.</p>
+</section>
+
+<section class="whats-new">
+  <h2 class="section-title">Coming Soon</h2>
+  {% if coming_soon %}
+  <ul class="coming-list">
+    {% for ep in coming_soon %}
+    <li>
+      <span class="card-num">EP {{ ep.episode }}</span>
+      <strong>{{ ep.title }}</strong>
+      {% if ep.tagline %}<span class="coming-tagline">— {{ ep.tagline }}</span>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="muted">No upcoming episodes announced yet. Follow via RSS or Twitter for new releases.</p>
+  {% endif %}
+</section>
+
+<section class="subscribe">
+  <h2 class="section-title">Never Miss an Episode</h2>
+  <p>New episodes release weekly. Follow along:</p>
+  <div class="subscribe-links">
+    {% if site.social.rss %}<a class="btn" href="{{ site.base_url }}{{ site.social.rss }}">Subscribe via RSS</a>{% endif %}
+    {% if site.social.twitter %}<a class="btn btn-outline" href="https://twitter.com/{{ site.social.twitter }}" rel="me">Follow on Twitter</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

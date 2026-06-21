@@ -1,0 +1,19 @@
+# Site configuration. Edit these values; build.py reads them at the top of
+# every generated page.
+title: "Gravedancer to General"
+subtitle: "Anatomy of a Catastrophe"
+author: "techmore"
+description: >-
+  A Star Wars fan fiction series following Qymaen jai Sheelal — the Gravedancer —
+  on his pre-Clone Wars path toward becoming General Grievous. A cinematic,
+  gothic war-story origin told in weekly episodes.
+# Base URL of the deployed site. Include the repo path if using a project page.
+# Examples:
+#   https://techmore.github.io/Gravedancer_to_General   (project page)
+#   https://gravedancer.example.com                       (custom domain)
+base_url: "https://techmore.github.io/Gravedancer_to_General"
+# Where new episodes are announced. Leave any blank to hide its link.
+social:
+  rss: "/feed.xml"
+  twitter: "techmore"
+  # github: "techmore/Gravedancer_to_General"

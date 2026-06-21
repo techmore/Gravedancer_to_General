@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1a2e"/>
+      <stop offset="1" stop-color="#22223a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#34344f" stroke-width="2"/>
+  <text x="600" y="240" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34" fill="#a8b088" letter-spacing="6">A STAR WARS FAN FICTION SERIES</text>
+  <text x="600" y="340" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="86" font-weight="700" fill="#e8e4d9">Gravedancer to General</text>
+  <text x="600" y="410" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="44" fill="#d4a373">Anatomy of a Catastrophe</text>
+  <line x1="450" y1="460" x2="750" y2="460" stroke="#d4a373" stroke-width="2"/>
+  <text x="600" y="510" text-anchor="middle" font-family="Inter, Helvetica, sans-serif" font-size="24" fill="#a8b088">The origin of General Grievous · Weekly episodes</text>
+</svg>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title | xml_escape }} — {{ site.subtitle | xml_escape }}</title>
+    <link>{{ site.base_url }}/</link>
+    <description>{{ site.description | xml_escape }}</description>
+    <language>en-us</language>
+    <lastBuildDate>{{ build_date.strftime('%a, %d %b %Y %H:%M:%S +0000') }}</lastBuildDate>
+    <atom:link href="{{ site.base_url }}/feed.xml" rel="self" type="application/rss+xml" />
+    {% for ep in episodes %}
+    <item>
+      <title>Episode {{ ep.episode }}: {{ ep.title | xml_escape }}</title>
+      <link>{{ site.base_url }}/episodes/{{ ep.slug }}.html</link>
+      <guid isPermaLink="true">{{ site.base_url }}/episodes/{{ ep.slug }}.html</guid>
+      <description>{{ ep.tagline | xml_escape }}</description>
+      {% if ep.date_iso %}<pubDate>{{ ep.date_iso }}T00:00:00 +0000</pubDate>{% endif %}
+    </item>
+    {% endfor %}
+  </channel>
+</rss>
