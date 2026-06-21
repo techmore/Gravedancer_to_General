@@ -8,71 +8,79 @@
     <p class="home-nav-title">{{ site.title }}</p>
     <p class="home-nav-subtitle">{{ site.subtitle }}</p>
     <ul class="home-nav-list">
-      <li><a href="#series-intro"><span><span class="nav-kicker">01</span><span class="nav-label">Intro</span></span><span class="nav-arrow">→</span></a></li>
-      <li><a href="#latest-episode"><span><span class="nav-kicker">02</span><span class="nav-label">Latest</span></span><span class="nav-arrow">→</span></a></li>
+      <li><a href="#banner"><span><span class="nav-kicker">01</span><span class="nav-label">Banner</span></span><span class="nav-arrow">→</span></a></li>
+      <li><a href="#current-story"><span><span class="nav-kicker">02</span><span class="nav-label">Current story</span></span><span class="nav-arrow">→</span></a></li>
       <li><a href="#episode-archive"><span><span class="nav-kicker">03</span><span class="nav-label">Archive</span></span><span class="nav-arrow">→</span></a></li>
       <li><a href="#coming-soon"><span><span class="nav-kicker">04</span><span class="nav-label">Coming soon</span></span><span class="nav-arrow">→</span></a></li>
       <li><a href="#subscribe"><span><span class="nav-kicker">05</span><span class="nav-label">Follow</span></span><span class="nav-arrow">→</span></a></li>
     </ul>
   </aside>
 
-  <div class="home-main">
-    <div class="hero-shell section-anchor" id="series-intro">
-      <section class="hero-panel" aria-label="Series introduction">
-        <p class="hero-eyebrow">A Star Wars fan fiction series</p>
-        <h1 class="hero-title">Gravedancer to General</h1>
-        <p class="hero-subtitle">Anatomy of a Catastrophe</p>
-        <p class="hero-desc">The origin of General Grievous, told in weekly episodes. Follow Qymaen jai Sheelal, the Kaleesh warlord called the Gravedancer, on his slow descent from hero to monster.</p>
-        <div class="hero-actions">
-          {% if latest %}<a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Read the latest</a>{% endif %}
-          <a class="btn btn-outline" href="#episode-archive">Browse archive</a>
-        </div>
-      </section>
-
-      <aside class="overview-panel" aria-label="Series overview">
-        <div>
-          <p class="panel-label">Series Overview</p>
-          <div class="mini-stat-grid">
-            <div class="mini-stat"><strong>{{ published | length }}</strong><span>published episodes</span></div>
-            <div class="mini-stat"><strong>{{ coming_soon | length }}</strong><span>coming soon</span></div>
-            <div class="mini-stat"><strong>{{ jedi_count }}</strong><span>Jedi catalogued</span></div>
-            <div class="mini-stat"><strong>{{ episodes | length }}</strong><span>total entries</span></div>
+  <main class="home-main">
+    <section class="banner-panel section-anchor" id="banner" aria-label="Homepage banner">
+      <div class="banner-grid">
+        <div class="banner-copy">
+          <p class="panel-label">A Star Wars fan fiction series</p>
+          <h1 class="hero-title">Gravedancer to General</h1>
+          <p class="hero-subtitle">Anatomy of a Catastrophe</p>
+          <p class="hero-desc">The origin of General Grievous, told in weekly episodes. We follow Qymaen jai Sheelal, the Kaleesh warlord called the Gravedancer, on his descent from hero to monster.</p>
+          <div class="hero-actions">
+            {% if latest %}<a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Read the latest</a>{% endif %}
+            <a class="btn btn-outline" href="#episode-archive">Browse archive</a>
           </div>
         </div>
-        <div>
-          <p class="panel-label">Tone</p>
-          <p class="muted">A colder, cleaner palette anchored in graphite, brass, and crimson so the site feels unified instead of split between experiments.</p>
-        </div>
-      </aside>
-    </div>
 
-    {% if latest %}
-    <section class="latest-banner section-anchor" id="latest-episode" aria-label="Latest episode">
-      <div class="latest-inner">
-        <span class="latest-eyebrow">Newest release · Episode {{ latest.episode }}</span>
-        <h2 class="latest-title"><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h2>
-        <p class="latest-tagline">{{ latest.tagline }}</p>
-        <p class="latest-meta">
-          Target: <strong>{{ latest.target_jedi }}</strong> ·
-          {{ latest.setting }} ·
-          {{ latest.reading_time }}
-        </p>
-        <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Read Episode {{ latest.episode }} →</a>
+        <div class="banner-meta" aria-label="Series stats">
+          <div class="banner-chip"><strong>{{ published | length }}</strong><span>published episodes</span></div>
+          <div class="banner-chip"><strong>{{ coming_soon | length }}</strong><span>coming soon</span></div>
+          <div class="banner-chip"><strong>{{ jedi_count }}</strong><span>Jedi catalogued</span></div>
+          <div class="banner-chip"><strong>{{ episodes | length }}</strong><span>total entries</span></div>
+        </div>
       </div>
     </section>
-    {% endif %}
 
-    {% if published or coming_soon %}
-    <div class="series-stats" aria-label="Series stats">
-      <span><strong>{{ published | length }}</strong> episodes published</span>
-      <span><strong>{{ coming_soon | length }}</strong> coming soon</span>
-      <span><strong>{{ jedi_count }}</strong> Jedi catalogued</span>
-    </div>
-    {% endif %}
+    <section class="section-block section-anchor" id="current-story">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Recent story</p>
+          <h2 class="section-title">Current Episode</h2>
+        </div>
+        {% if latest %}<p class="section-note">We can feature the active episode here as the main entry point for readers.</p>{% endif %}
+      </div>
 
-    <section class="archive section-anchor" id="episode-archive" aria-label="Episode archive">
+      {% if latest %}
+      <div class="story-grid">
+        <article class="story-panel current-episode">
+          <p class="eyebrow">Episode {{ latest.episode }}</p>
+          <h3><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h3>
+          <p class="latest-tagline">{{ latest.tagline }}</p>
+          <p>Target: <strong>{{ latest.target_jedi }}</strong></p>
+          <p>Setting: <strong>{{ latest.setting }}</strong></p>
+          <p>{{ latest.reading_time }} · {{ "{:,}".format(latest.word_count) }} words</p>
+          <div class="hero-actions">
+            <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Open episode</a>
+            <a class="btn btn-outline" href="#episode-archive">View pass episodes</a>
+          </div>
+        </article>
+
+        <aside class="media-panel" aria-label="Visual slots">
+          <div class="media-slot tall"></div>
+          <div class="media-slot wide"></div>
+        </aside>
+      </div>
+      {% endif %}
+    </section>
+
+    <section class="section-block section-anchor archive" id="episode-archive" aria-label="Episode archive">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Archive</p>
+          <h2 class="section-title">Pass Episodes</h2>
+        </div>
+        <p class="section-note">The archive can hold multiple art slots and clearer episode cards so the page breathes more.</p>
+      </div>
+
       <div class="archive-controls">
-        <h2 class="section-title">All Episodes</h2>
         <div class="filters">
           <label class="filter">
             <span class="filter-label">Status</span>
@@ -103,6 +111,7 @@
             data-status="{{ ep.status }}"
             data-jedi="{{ ep.target_jedi }}"
             data-setting="{{ ep.setting }}">
+          <div class="episode-card__media {% if loop.index0 % 3 == 0 %}tall{% elif loop.index0 % 3 == 1 %}duo{% endif %}"></div>
           <div class="card-head">
             <span class="card-num">Episode {{ ep.episode }}</span>
             <span class="{{ ep.status | attrs }}">{{ ep.status | status_label }}</span>
@@ -126,8 +135,13 @@
       <p class="archive-empty" id="archive-empty" hidden>No episodes match these filters.</p>
     </section>
 
-    <section class="whats-new section-anchor" id="coming-soon">
-      <h2 class="section-title">Coming Soon</h2>
+    <section class="section-block section-anchor" id="coming-soon">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Preview</p>
+          <h2 class="section-title">Coming Soon</h2>
+        </div>
+      </div>
       {% if coming_soon %}
       <ul class="coming-list">
         {% for ep in coming_soon %}
@@ -154,6 +168,6 @@
     </section>
 
     <hr class="ornament" aria-hidden="true">
-  </div>
+  </main>
 </div>
 {% endblock %}
