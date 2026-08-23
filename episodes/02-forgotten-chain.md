@@ -9,6 +9,7 @@ setting: Artificial world built around a captive star. Acid rain that sizzles on
   are studied.
 status: published
 published_at: 2026-08-23
+cover: assets/img/02-forgotten-chain/cover.jpg
 ---
 
 ## DAY 1: Arrival on the Chain
