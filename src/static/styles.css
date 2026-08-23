@@ -291,6 +291,9 @@ p { margin: 0 0 1em; }
 }
 .banner-visual__art {
   min-height: 380px;
+  max-width: 440px;
+  justify-self: center;
+  width: 100%;
   border-radius: 18px;
   border: 1px solid rgba(254,250,224,0.14);
   background:
@@ -1223,8 +1226,9 @@ select:focus, input:focus {
   object-fit: cover;
 }
 .episode-hero {
-  margin: 0 0 1rem;
-  border-radius: 16px;
+  margin: 0 auto 1rem;
+  max-width: 520px;
+  border-radius: 14px;
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
