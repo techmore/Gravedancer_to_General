@@ -10,6 +10,7 @@ setting: Tundra world with the frozen remains of a Clone Wars battle. Acid rain 
 status: published
 tagline: A dead dreadnought bridges the ice — and the war never left.
 published_at: 2026-08-23
+cover: assets/img/01-hollow-bridge/cover.jpg
 ---
 
 ## DAY 1: White Silence
