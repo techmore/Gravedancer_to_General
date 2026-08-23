@@ -317,17 +317,18 @@ p { margin: 0 0 1em; }
   opacity: 0.95;
 }
 .banner-visual__art::after {
-  content: "Image slot for General Grievous";
+  content: "";
   position: absolute;
   left: 1rem;
   bottom: 1rem;
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  background: rgba(24,33,14,0.8);
-  color: var(--text);
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(254,250,224,0.22);
+  background:
+    radial-gradient(circle at 38% 32%, rgba(254,250,224,0.30), transparent 42%),
+    radial-gradient(circle at 62% 66%, rgba(188,108,37,0.45), transparent 55%),
+    radial-gradient(circle at 50% 50%, rgba(24,33,14,0.5), rgba(24,33,14,0.85));
 }
 .banner-visual__tag {
   position: absolute;
@@ -421,7 +422,7 @@ p { margin: 0 0 1em; }
     radial-gradient(circle at 40% 30%, rgba(254,250,224,0.12), transparent 28%),
     linear-gradient(150deg, rgba(40,54,24,0.96), rgba(24,33,14,0.96));
 }
-.media-slot.banner::after { content: "Hero visual placeholder"; }
+.media-slot.banner::after { content: ""; }
 
 .current-episode {
   display: grid;

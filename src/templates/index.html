@@ -30,15 +30,15 @@
           </div>
         </div>
 
-        <div class="banner-visual" aria-label="Hero image slot">
+        <div class="banner-visual" aria-label="Series artwork">
           <div class="banner-visual__art">
-            <span class="banner-visual__tag">Hero banner space</span>
+            <span class="banner-visual__tag">The Gravedancer</span>
           </div>
           <div class="banner-meta" aria-label="Series stats">
-            <div class="banner-chip"><strong>{{ published | length }}</strong><span>published episodes</span></div>
+            <div class="banner-chip"><strong>{{ published | length }}</strong><span>episodes published</span></div>
             <div class="banner-chip"><strong>{{ coming_soon | length }}</strong><span>coming soon</span></div>
             <div class="banner-chip"><strong>{{ jedi_count }}</strong><span>Jedi catalogued</span></div>
-            <div class="banner-chip"><strong>{{ episodes | length }}</strong><span>total entries</span></div>
+            <div class="banner-chip"><strong>{{ total_word_count }}</strong><span>words of war</span></div>
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
           <p class="section-kicker">Recent story</p>
           <h2 class="section-title">Current Episode</h2>
         </div>
-        {% if latest %}<p class="section-note">We can feature the active episode here as the main entry point for readers.</p>{% endif %}
+        {% if latest %}<p class="section-note">The most recent chronicle from the front — start here.</p>{% endif %}
       </div>
 
       {% if latest %}
@@ -58,18 +58,18 @@
         <article class="story-panel current-episode">
           <p class="eyebrow">Episode {{ latest.episode }}</p>
           <h3><a href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">{{ latest.title }}</a></h3>
-          <p class="latest-tagline">{{ latest.tagline }}</p>
+          {% if latest.tagline %}<p class="latest-tagline">{{ latest.tagline }}</p>{% endif %}
           <p>Target: <strong>{{ latest.target_jedi }}</strong></p>
           <p>Setting: <strong>{{ latest.setting }}</strong></p>
           <p>{{ latest.reading_time }} · {{ "{:,}".format(latest.word_count) }} words</p>
           <div class="hero-actions">
             <a class="btn" href="{{ site.base_url }}/episodes/{{ latest.slug }}.html">Open episode</a>
-            <a class="btn btn-outline" href="#episode-archive">View pass episodes</a>
+            <a class="btn btn-outline" href="#episode-archive">Browse the archive</a>
           </div>
         </article>
 
-        <aside class="media-panel" aria-label="Visual slots">
-          <div class="media-slot banner">General Grievous banner placeholder</div>
+        <aside class="media-panel" aria-label="From the current episode">
+          <div class="media-slot banner">The hunt continues</div>
           <div class="media-slot tall"></div>
           <div class="media-slot wide"></div>
         </aside>
@@ -83,7 +83,7 @@
           <p class="section-kicker">Archive</p>
           <h2 class="section-title">Pass Episodes</h2>
         </div>
-        <p class="section-note">The archive can hold multiple art slots and clearer episode cards so the page breathes more.</p>
+        <p class="section-note">Every completed chronicle, newest first. Filter by Jedi, setting, or status.</p>
       </div>
 
       <div class="archive-controls">

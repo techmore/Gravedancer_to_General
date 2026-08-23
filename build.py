@@ -324,6 +324,8 @@ def build_site():
         **base_context,
         episodes=episodes, published=published, coming_soon=coming_soon,
         latest=latest, jedi_count=len(jedi),
+        total_word_count="{:,}".format(
+            sum(e.get("word_count", 0) for e in published)),
         nav_active="archive",
     ))
 
