@@ -31,6 +31,9 @@
       <a href="{{ site.base_url }}/" class="back-link">← All episodes</a>
       <span>Episode {{ episode.episode }}</span>
     </p>
+    {% if episode.cover %}
+    <figure class="episode-hero"><img src="{{ site.base_url }}/{{ episode.cover }}" alt=""></figure>
+    {% endif %}
     <h1 class="episode-title">{{ episode.title }}</h1>
     <p class="episode-tagline">{{ episode.tagline }}</p>
 

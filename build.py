@@ -317,6 +317,10 @@ def build_site():
         shutil.copytree(STATIC_DIR, DIST_DIR / "static")
     if ASSETS_DIR.exists():
         shutil.copytree(ASSETS_DIR, DIST_DIR / "assets")
+    # Episode cover art (root assets/, populated by publish_episode.py)
+    if (ROOT / "assets").is_dir():
+        shutil.copytree(ROOT / "assets", DIST_DIR / "assets",
+                        dirs_exist_ok=True)
 
     # ── index.html ──
     tmpl = env.get_template("index.html")

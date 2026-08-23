@@ -1189,4 +1189,48 @@ select:focus, input:focus {
     linear-gradient(245deg, rgba(96,108,56,0.18) 0 49%, transparent 49%),
   rgba(254,250,224,0.04);
 }
-.episode-card__media::after { content: "Image slot"; }
+.episode-card__media:not(.has-art)::after { content: "Image slot"; }
+
+/* ── Episode cover art (M4) ──────────────────────────────────────────── */
+.episode-card__media.has-art {
+  position: relative;
+  padding: 0;
+}
+.episode-card__media.has-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.banner-art-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.media-slot--img {
+  position: relative;
+  border-style: solid;
+  overflow: hidden;
+}
+.media-slot--img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.episode-hero {
+  margin: 0 0 1rem;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+.episode-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

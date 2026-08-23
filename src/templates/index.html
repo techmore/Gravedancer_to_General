@@ -32,6 +32,7 @@
 
         <div class="banner-visual" aria-label="Series artwork">
           <div class="banner-visual__art">
+            {% if latest and latest.cover %}<img class="banner-art-img" src="{{ site.base_url }}/{{ latest.cover }}" alt="">{% endif -%}
             <span class="banner-visual__tag">The Gravedancer</span>
           </div>
           <div class="banner-meta" aria-label="Series stats">
@@ -69,7 +70,11 @@
         </article>
 
         <aside class="media-panel" aria-label="From the current episode">
+          {% if latest.cover %}
+          <div class="media-slot banner media-slot--img"><img loading="lazy" src="{{ site.base_url }}/{{ latest.cover }}" alt=""></div>
+          {% else %}
           <div class="media-slot banner">The hunt continues</div>
+          {% endif %}
           <div class="media-slot tall"></div>
           <div class="media-slot wide"></div>
         </aside>
@@ -116,7 +121,9 @@
             data-status="{{ ep.status }}"
             data-jedi="{{ ep.target_jedi }}"
             data-setting="{{ ep.setting }}">
-          <div class="episode-card__media {% if loop.index0 % 3 == 0 %}tall{% elif loop.index0 % 3 == 1 %}duo{% endif %}"></div>
+          <div class="episode-card__media {% if loop.index0 % 3 == 0 %}tall{% elif loop.index0 % 3 == 1 %}duo{% endif %} {% if ep.cover %}has-art{% endif %}">
+            {% if ep.cover %}<img loading="lazy" src="{{ site.base_url }}/{{ ep.cover }}" alt="">{% endif -%}
+          </div>
           <div class="card-head">
             <span class="card-num">Episode {{ ep.episode }}</span>
             <span class="{{ ep.status | attrs }}">{{ ep.status | status_label }}</span>
