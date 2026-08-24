@@ -38,7 +38,10 @@
   #er-counter { font-variant-numeric: tabular-nums; opacity: .8; min-width: 4.5em; text-align: center; }
 
   /* Book viewport: fixed height, hidden overflow; content flows into
-     horizontal columns exactly one page wide each. */
+     horizontal columns. Each column (page) is narrower than the viewport;
+     the remaining space becomes the outer gutter, so pages tile exactly
+     one-per-screen with symmetric margins and no offset. */
+  :root { --er-page: min(42rem, calc(100vw - 4rem)); }
   .er-viewport {
     position: absolute; inset: 3rem 0 0 0;
     overflow: hidden;
@@ -47,12 +50,11 @@
   body.ereader-mode.theme-sepia .er-viewport { background: #f5f0e6; }
   .er-book {
     height: 100%;
-    column-width: auto;
+    column-width: var(--er-page);
+    column-gap: calc(100vw - var(--er-page));
     column-fill: auto;
-    column-gap: 5rem;
     box-sizing: border-box;
-    padding: 2.2rem max(1.5rem, calc((100vw - 44rem) / 2));
-    width: 100vw;
+    padding: 2.2rem 0;
     transition: transform .35s ease;
     will-change: transform;
     font-family: Lora, Georgia, serif;
@@ -111,7 +113,7 @@
 </div>
 
 <div class="er-viewport" id="er-viewport">
-  <article class="er-book" id="er-book" style="column-width: 100vw;">
+  <article class="er-book" id="er-book">
     <h1>{{ episode.title }}</h1>
     <p class="er-tagline">Episode {{ episode.episode }} · {{ episode.word_count | int }} words
        {% if episode.tagline %}· {{ episode.tagline }}{% endif %}</p>
@@ -155,22 +157,18 @@
     });
   });
 
-  // Column width tracks the viewport so each column is exactly one page.
-  function colWidth() { return viewport.clientWidth; }
-  function colGap() {
-    return parseFloat(getComputedStyle(book).columnGap) || 0;
-  }
+  // Column width is set in CSS (--er-page); gap fills the rest of the
+  // viewport, so each page step is exactly one viewport width.
   var page = 0, pages = 1;
 
+  function step() { return viewport.clientWidth; }
   function relayout() {
-    book.style.columnWidth = colWidth() + 'px';
-    // Force reflow, then measure total scrollable width.
-    pages = Math.max(1, Math.round(book.scrollWidth / (colWidth() + colGap())));
+    pages = Math.max(1, Math.round(book.scrollWidth / step()));
     if (page >= pages) page = pages - 1;
     update();
   }
   function update() {
-    book.style.transform = 'translateX(' + (-page * (colWidth() + colGap())) + 'px)';
+    book.style.transform = 'translateX(' + (-page * step()) + 'px)';
     counter.textContent = (page + 1) + ' / ' + pages;
     try { localStorage.setItem('er-pos:' + location.pathname, String(page)); } catch (e) {}
   }
