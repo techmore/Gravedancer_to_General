@@ -35,6 +35,17 @@
     {% if episode.cover %}
     <figure class="episode-hero"><img src="{{ site.base_url }}/{{ episode.cover }}" alt=""></figure>
     {% endif %}
+    {% if episode.status == 'coming_soon' %}
+    <p class="coming-soon-notice">⚠ This episode is not yet published. Check back {{ episode.date_long or 'soon' }}.</p>
+    {% else %}
+    <div class="episode-tools">
+      <a class="btn btn-sm tool-ereader" href="{{ site.base_url }}/read/{{ episode.slug }}.html">📖 eReader view</a>
+      {% if episode.downloads %}
+        {% if episode.downloads.get('pdf') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>⬇ PDF</a>{% endif %}
+        {% if episode.downloads.get('epub') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>⬇ EPUB</a>{% endif %}
+      {% endif %}
+    </div>
+    {% endif %}
     <h1 class="episode-title">{{ episode.title }}</h1>
     <p class="episode-tagline">{{ episode.tagline }}</p>
 
@@ -49,14 +60,6 @@
 
     {% if episode.status == 'coming_soon' %}
     <p class="coming-soon-notice">⚠ This episode is not yet published. Check back {{ episode.date_long or 'soon' }}.</p>
-    {% else %}
-    <div class="episode-tools">
-      <a class="btn btn-sm tool-ereader" href="{{ site.base_url }}/read/{{ episode.slug }}.html">📖 eReader view</a>
-      {% if episode.downloads %}
-        {% if episode.downloads.get('pdf') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>⬇ PDF</a>{% endif %}
-        {% if episode.downloads.get('epub') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>⬇ EPUB</a>{% endif %}
-      {% endif %}
-    </div>
     {% endif %}
   </header>
 
