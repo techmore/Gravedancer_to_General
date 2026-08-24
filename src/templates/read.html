@@ -4,8 +4,9 @@
 {% block description %}{{ episode.excerpt }}{% endblock %}
 
 {% block head_extra %}
+<script src="https://cdn.jsdelivr.net/npm/epubjs@0.3.93/dist/epub.min.js"></script>
 <style>
-  /* ── eReader: paginated book mode (page flipping, no scroll) ── */
+  /* ── eReader: real EPUB rendering via epub.js ── */
   html, body { height: 100%; }
   body.ereader-mode { overflow: hidden; }
   body.ereader-mode .site-header,
@@ -22,86 +23,52 @@
     font-size: .85rem;
     border-bottom: 1px solid rgba(255,255,255,.06);
   }
-  body.ereader-mode.theme-sepia .ereader-bar {
+  body.theme-sepia .ereader-bar {
     background: rgba(245, 240, 230, .95); color: #3a3228;
     border-bottom-color: rgba(0,0,0,.08);
   }
   .ereader-bar a { color: inherit; text-decoration: none; opacity: .8; white-space: nowrap; }
   .ereader-bar a:hover { opacity: 1; }
-  .ereader-bar .spacer { flex: 1; }
   .ereader-bar button {
     background: none; border: 1px solid currentColor; border-radius: 6px;
     color: inherit; cursor: pointer; font: inherit;
     padding: .15rem .55rem; opacity: .75; white-space: nowrap;
   }
   .ereader-bar button:hover { opacity: 1; }
-  #er-counter { font-variant-numeric: tabular-nums; opacity: .8; min-width: 4.5em; text-align: center; }
+  .ereader-bar select {
+    background: transparent; color: inherit; border: none;
+    font: inherit; max-width: 14rem; opacity: .85; cursor: pointer;
+  }
+  .ereader-bar select option { color: #222; }
+  #er-counter { font-variant-numeric: tabular-nums; opacity: .8; min-width: 5em; text-align: center; }
+  .spacer { flex: 1; }
 
-  /* Book viewport: fixed height, hidden overflow; content flows into
-     horizontal columns. Each column (page) is narrower than the viewport;
-     the remaining space becomes the outer gutter, so pages tile exactly
-     one-per-screen with symmetric margins and no offset. */
-  :root { --er-page: min(42rem, calc(100vw - 4rem)); }
-  .er-viewport {
-    position: absolute; inset: 3rem 0 0 0;
-    overflow: hidden;
-    background: #14100c;
+  #er-book { position: absolute; inset: 3rem 0 0 0; background: #14100c; }
+  body.theme-sepia #er-book { background: #f5f0e6; }
+  #er-loading {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    gap: .75rem; align-items: center; justify-content: center;
+    color: #d8cfc2; font-family: Inter, system-ui, sans-serif; font-size: .9rem;
+    pointer-events: none;
   }
-  body.ereader-mode.theme-sepia .er-viewport { background: #f5f0e6; }
-  .er-book {
-    height: 100%;
-    column-width: var(--er-page);
-    column-gap: calc(100vw - var(--er-page));
-    column-fill: auto;
-    box-sizing: border-box;
-    padding: 2.2rem 0;
-    transition: transform .35s ease;
-    will-change: transform;
-    font-family: Lora, Georgia, serif;
-    line-height: 1.85;
-    color: #d8cfc2;
-  }
-  body.ereader-mode.theme-sepia .er-book { color: #2b241b; }
-  .er-book h1 { font-size: 2rem; margin: 0 0 .25rem; break-after: avoid; }
-  .er-book .er-tagline { font-style: italic; opacity: .7; margin: 0 0 2rem; }
-  .er-book h2 {
-    font-size: 1.35rem; margin: 2.5rem 0 .9rem;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 25%, transparent);
-    padding-bottom: .3rem; break-after: avoid;
-  }
-  .er-book p { margin: 0 0 1.05em; text-indent: 1.4em; hyphens: auto; text-align: justify; }
-  .er-book figure.day-plate {
-    margin: 1.4rem 0; break-inside: avoid;
-    border-radius: 10px; overflow: hidden;
-  }
-  .er-book figure.day-plate img { display: block; width: 100%; height: auto; }
-  .er-hint {
-    text-align: center; font-family: Inter, system-ui, sans-serif;
-    font-size: .78rem; opacity: .45; margin-top: 3rem;
-  }
-
-  /* Flip zones */
-  .er-flip {
-    position: absolute; top: 3rem; bottom: 0; width: 18%;
-    cursor: pointer; z-index: 5; user-select: none;
-  }
-  .er-flip.prev { left: 0; } .er-flip.next { right: 0; }
-  .er-flip::after {
-    content: '‹'; position: absolute; top: 50%; transform: translateY(-50%);
-    left: .4rem; font: 2.2rem/1 Georgia, serif; opacity: 0; transition: opacity .2s;
-    color: inherit; pointer-events: none;
-  }
-  .er-flip.next::after { content: '›'; left: auto; right: .4rem; }
-  .er-flip:hover::after { opacity: .5; }
+  #er-error { color: #e08a7a; display: none; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="ereader-bar">
   <a href="{{ site.base_url }}/episodes/{{ episode.slug }}.html">← Episode</a>
-  <button type="button" id="er-prev" aria-label="Previous page">← Page</button>
+  {% if episode.days | length > 1 %}
+  <select id="er-toc" aria-label="Jump to day">
+    <option value="">Day…</option>
+    {% for day in episode.days %}
+    <option value="{{ loop.index0 }}">Day {{ day.num }}: {{ day.title }}</option>
+    {% endfor %}
+  </select>
+  {% endif %}
+  <button type="button" id="er-prev" aria-label="Previous page">←</button>
   <span id="er-counter">– / –</span>
-  <button type="button" id="er-next" aria-label="Next page">Page →</button>
+  <button type="button" id="er-next" aria-label="Next page">→</button>
   <span class="spacer"></span>
   <button type="button" data-theme="sepia">Sepia</button>
   <button type="button" data-theme="dark">Dark</button>
@@ -112,97 +79,106 @@
   {% endif %}
 </div>
 
-<div class="er-viewport" id="er-viewport">
-  <article class="er-book" id="er-book">
-    <h1>{{ episode.title }}</h1>
-    <p class="er-tagline">Episode {{ episode.episode }} · {{ episode.word_count | int }} words
-       {% if episode.tagline %}· {{ episode.tagline }}{% endif %}</p>
-
-    {% for day in episode.days %}
-    <section id="day-{{ day.num }}">
-      <h2>Day {{ day.num }}: {{ day.title }}</h2>
-      {% if episode.plates and episode.plates.get(day.num) %}
-      <figure class="day-plate"><img src="{{ site.base_url }}/{{ episode.plates.get(day.num) }}" alt="Scene art for Day {{ day.num }}"></figure>
-      {% endif %}
-      {{ day.html | safe }}
-    </section>
-    {% endfor %}
-
-    <p class="er-hint">End of Episode {{ episode.episode }} — use ← Page / Page → to navigate</p>
-  </article>
-
-  <div class="er-flip prev" id="er-zone-prev" aria-hidden="true"></div>
-  <div class="er-flip next" id="er-zone-next" aria-hidden="true"></div>
+<div id="er-book"></div>
+<div id="er-loading">
+  <span>Opening the archive…</span>
+  <span id="er-error">This episode has no ebook file yet — check back after it is published.</span>
 </div>
 
 <script>
 (function () {
-  var viewport = document.getElementById('er-viewport');
-  var book = document.getElementById('er-book');
+  var bookEl = document.getElementById('er-book');
   var counter = document.getElementById('er-counter');
+  var errorEl = document.getElementById('er-error');
 
-  // Theme handling
-  document.body.classList.add('ereader-mode');
-  try {
-    var stored = localStorage.getItem('ereader-theme');
-    if (stored && stored !== 'light') document.body.classList.add('theme-' + stored);
-  } catch (e) {}
+  // Theme
+  var themes = {
+    dark: 'body { background: #14100c; color: #d8cfc2; }'
+        + ' p, h1, h2, h3, span, div { color: #d8cfc2 !important; }',
+    sepia: 'body { background: #f5f0e6; color: #2b241b; }'
+         + ' p, h1, h2, h3, span, div { color: #2b241b !important; }'
+  };
+  function applyTheme(name) {
+    if (!window.rendition) return;
+    window.rendition.themes.register('custom', themes[name] || themes.sepia);
+    window.rendition.themes.select(themes[name] ? name : 'sepia');
+  }
   document.querySelectorAll('.ereader-bar button[data-theme]').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      document.body.classList.remove('theme-sepia', 'theme-dark', 'theme-light');
-      var t = btn.getAttribute('data-theme');
-      if (t === 'sepia' || t === 'dark') document.body.classList.add('theme-' + t);
-      try { localStorage.setItem('ereader-theme', t); } catch (e) {}
-      relayout();
+      try { localStorage.setItem('ereader-theme', btn.getAttribute('data-theme')); } catch (e) {}
+      applyTheme(btn.getAttribute('data-theme'));
     });
   });
 
-  // Column width is set in CSS (--er-page); gap fills the rest of the
-  // viewport, so each page step is exactly one viewport width.
-  var page = 0, pages = 1;
-
-  function step() { return viewport.clientWidth; }
-  function relayout() {
-    pages = Math.max(1, Math.round(book.scrollWidth / step()));
-    if (page >= pages) page = pages - 1;
-    update();
-  }
-  function update() {
-    book.style.transform = 'translateX(' + (-page * step()) + 'px)';
-    counter.textContent = (page + 1) + ' / ' + pages;
-    try { localStorage.setItem('er-pos:' + location.pathname, String(page)); } catch (e) {}
-  }
-  function go(delta) {
-    page = Math.min(pages - 1, Math.max(0, page + delta));
-    update();
+  var epubPath = '{% if episode.downloads %}{{ episode.downloads.get("epub") }}{% endif %}';
+  if (!epubPath || typeof ePub === 'undefined') {
+    counter.textContent = '';
+    errorEl.style.display = 'block';
+    return;
   }
 
-  document.getElementById('er-prev').addEventListener('click', function () { go(-1); });
-  document.getElementById('er-next').addEventListener('click', function () { go(1); });
-  document.getElementById('er-zone-prev').addEventListener('click', function () { go(-1); });
-  document.getElementById('er-zone-next').addEventListener('click', function () { go(1); });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowLeft') go(-1);
-    else if (e.key === 'ArrowRight') go(1);
+  var book = ePub('{{ site.base_url }}/' + epubPath);
+  var rendition = book.renderTo(bookEl, {
+    width: '100%', height: '100%',
+    spread: 'auto',
+    flow: 'paginated',
+  });
+  window.rendition = rendition;
+
+  var savedLocation = null;
+  try { savedLocation = localStorage.getItem('er-cfi:' + location.pathname); } catch (e) {}
+
+  rendition.display(savedLocation || undefined).then(function () {
+    document.getElementById('er-loading').style.display = 'none';
+    applyTheme(localStorage.getItem('ereader-theme') || 'sepia');
   });
 
-  // Touch swipe
+  function updateCounter() {
+    book.ready.then(function () {
+      return book.locations.generate(1600);
+    }).then(function () {
+      var pct = Math.round((book.locations.percentageFromCfi(rendition.currentLocation().start.cfi) || 0) * 100);
+      counter.textContent = pct + '%';
+    }).catch(function () {});
+  }
+
+  rendition.on('relocated', function (location) {
+    updateCounter();
+    try { localStorage.setItem('er-cfi:' + location.pathname, location.start.cfi); } catch (e) {}
+  });
+
+  function prev() { rendition.prev(); }
+  function next() { rendition.next(); }
+  document.getElementById('er-prev').addEventListener('click', prev);
+  document.getElementById('er-next').addEventListener('click', next);
+  bookEl.addEventListener('click', function (e) {
+    var x = e.clientX / window.innerWidth;
+    if (x > 0.7 && e.target.closest('p, h1, h2, h3, span')) next();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') prev();
+    else if (e.key === 'ArrowRight') next();
+  });
   var touchX = null;
-  viewport.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, {passive: true});
-  viewport.addEventListener('touchend', function (e) {
+  bookEl.addEventListener('touchstart', function (e) { touchX = e.touches[0].clientX; }, {passive: true});
+  bookEl.addEventListener('touchend', function (e) {
     if (touchX === null) return;
     var dx = e.changedTouches[0].clientX - touchX;
-    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); }
     touchX = null;
   }, {passive: true});
 
-  window.addEventListener('resize', function () { relayout(); });
-  window.addEventListener('load', function () { relayout(); });
-  relayout();
-  try {
-    var saved = localStorage.getItem('er-pos:' + location.pathname);
-    if (saved) { page = Math.min(parseInt(saved, 10) || 0, pages - 1); update(); }
-  } catch (e) {}
+  // TOC: jump to the chapter whose href contains day-N
+  var tocSel = document.getElementById('er-toc');
+  if (tocSel) tocSel.addEventListener('change', function () {
+    var idx = parseInt(tocSel.value, 10);
+    if (isNaN(idx)) return;
+    book.loaded.toc.then(function (toc) {
+      // skip title page: chapter i corresponds to day i
+      var target = toc[Math.min(idx + 1, toc.length - 1)];
+      if (target) rendition.display(target.href);
+    });
+  });
 })();
 </script>
 {% endblock %}
