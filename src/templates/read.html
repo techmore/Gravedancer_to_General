@@ -189,11 +189,12 @@
   // TOC: jump to the chapter whose href contains day-N
   var tocSel = document.getElementById('er-toc');
   if (tocSel) tocSel.addEventListener('change', function () {
-    var idx = parseInt(tocSel.value, 10);
-    if (isNaN(idx)) return;
+    var dayNum = tocSel.value;
+    if (!dayNum) return;
     book.loaded.toc.then(function (toc) {
-      // skip title page: chapter i corresponds to day i
-      var target = toc[Math.min(idx + 1, toc.length - 1)];
+      var target = toc.find(function (e) {
+        return (e.href || '').indexOf('day-' + parseInt(dayNum, 10) + '.xhtml') !== -1;
+      });
       if (target) rendition.display(target.href);
     });
   });
