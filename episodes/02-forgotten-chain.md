@@ -8,6 +8,8 @@ setting: Artificial world built around a captive star. Acid rain that sizzles on
   metal. The primary action takes place at an operating theater where Jedi survivors
   are studied.
 status: published
+tagline: On a world built around a captive star, the oldest master learns what
+  the youngest warlord already knows — the chain binds both its ends.
 published_at: 2026-08-23
 cover: assets/img/02-forgotten-chain/cover.jpg
 ---

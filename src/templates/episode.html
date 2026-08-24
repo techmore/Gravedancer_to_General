@@ -16,8 +16,9 @@
   {% if site.social.twitter %}
   <meta name="twitter:creator" content="@{{ site.social.twitter }}">
   {% endif %}
-  <meta property="og:image" content="{{ site.base_url }}/assets/og-image.svg">
-  <meta name="twitter:image" content="{{ site.base_url }}/assets/og-image.svg">
+  {% set og_image = site.base_url ~ '/' ~ episode.cover if episode.cover else site.base_url ~ '/assets/og-image.svg' %}
+  <meta property="og:image" content="{{ og_image }}">
+  <meta name="twitter:image" content="{{ og_image }}">
 {% endblock %}
 
 {% block content %}
