@@ -6,6 +6,7 @@ jedi_fate: Unknown
 setting: Kalee
 status: coming_soon
 tagline: Every chain is forged link by link — and Qymaen is running out of links he is willing to break.
+cover: assets/img/03-the-ashen-chain/cover.jpg
 ---
 
 The hunt continues. Episode 3 is in the forge.

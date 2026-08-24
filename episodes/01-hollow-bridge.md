@@ -11,6 +11,13 @@ status: published
 tagline: A dead dreadnought bridges the ice — and the war never left.
 published_at: 2026-08-23
 cover: assets/img/01-hollow-bridge/cover.jpg
+plates:
+  1: assets/img/01-hollow-bridge/day-01.jpg
+  2: assets/img/01-hollow-bridge/day-02.jpg
+  3: assets/img/01-hollow-bridge/day-03.jpg
+  4: assets/img/01-hollow-bridge/day-04.jpg
+  5: assets/img/01-hollow-bridge/day-05.jpg
+  6: assets/img/01-hollow-bridge/day-06.jpg
 ---
 
 ## DAY 1: White Silence

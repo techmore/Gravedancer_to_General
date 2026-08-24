@@ -1238,3 +1238,16 @@ select:focus, input:focus {
   width: 100%;
   height: auto;
 }
+
+.day-plate {
+  margin: 0 0 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md, var(--shadow-lg));
+}
+.day-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+}

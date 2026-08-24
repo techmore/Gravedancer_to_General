@@ -80,6 +80,9 @@
     {% for day in episode.days %}
     <section class="day {% if not loop.first %}is-hidden{% endif %}" id="day-{{ day.num }}" data-day="{{ day.num }}">
       <h2 class="day-title">Day {{ day.num }}: {{ day.title }}</h2>
+      {% if episode.plates and episode.plates.get(day.num) %}
+      <figure class="day-plate"><img loading="lazy" src="{{ site.base_url }}/{{ episode.plates.get(day.num) }}" alt="Scene art for Day {{ day.num }}"></figure>
+      {% endif %}
       {{ day.html | safe }}
     </section>
     {% endfor %}

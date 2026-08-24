@@ -12,6 +12,13 @@ tagline: On a world built around a captive star, the oldest master learns what
   the youngest warlord already knows — the chain binds both its ends.
 published_at: 2026-08-23
 cover: assets/img/02-forgotten-chain/cover.jpg
+plates:
+  1: assets/img/02-forgotten-chain/day-01.jpg
+  2: assets/img/02-forgotten-chain/day-02.jpg
+  3: assets/img/02-forgotten-chain/day-03.jpg
+  4: assets/img/02-forgotten-chain/day-04.jpg
+  5: assets/img/02-forgotten-chain/day-05.jpg
+  6: assets/img/02-forgotten-chain/day-06.jpg
 ---
 
 ## DAY 1: Arrival on the Chain
