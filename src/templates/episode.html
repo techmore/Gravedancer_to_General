@@ -41,8 +41,10 @@
     <div class="episode-tools">
       <a class="btn btn-sm tool-ereader" href="{{ site.base_url }}/read/{{ episode.slug }}.html">📖 eReader view</a>
       {% if episode.downloads %}
-        {% if episode.downloads.get('pdf') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>⬇ PDF</a>{% endif %}
-        {% if episode.downloads.get('epub') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>⬇ EPUB</a>{% endif %}
+        {% set pdf_name = episode.downloads['pdf'].rsplit('/', 1)[-1] if episode.downloads.get('pdf') else '' %}
+        {% set epub_name = episode.downloads['epub'].rsplit('/', 1)[-1] if episode.downloads.get('epub') else '' %}
+        {% if episode.downloads.get('pdf') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download="{{ pdf_name }}" type="application/pdf">⬇ PDF</a>{% endif %}
+        {% if episode.downloads.get('epub') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download="{{ epub_name }}" type="application/epub+zip">⬇ EPUB</a>{% endif %}
       {% endif %}
     </div>
     {% endif %}

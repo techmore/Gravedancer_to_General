@@ -19,8 +19,8 @@ plates:
   5: assets/img/01-hollow-bridge/day-05.jpg
   6: assets/img/01-hollow-bridge/day-06.jpg
 downloads:
-  epub: assets/downloads/01-hollow-bridge/episode.epub
-  pdf: assets/downloads/01-hollow-bridge/episode.pdf
+  epub: assets/downloads/01-hollow-bridge/2026-08-22-01-hollow-bridge.epub
+  pdf: assets/downloads/01-hollow-bridge/2026-08-22-01-hollow-bridge.pdf
 ---
 
 ## DAY 1: White Silence

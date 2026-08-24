@@ -74,8 +74,8 @@
   <button type="button" data-theme="dark">Dark</button>
   {% if episode.downloads %}
   <span class="spacer"></span>
-  {% if episode.downloads.get('pdf') %}<a href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>PDF ↓</a>{% endif %}
-  {% if episode.downloads.get('epub') %}<a href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>EPUB ↓</a>{% endif %}
+  {% if episode.downloads.get('pdf') %}<a href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download="{{ episode.downloads['pdf'].rsplit('/', 1)[-1] }}" type="application/pdf">PDF ↓</a>{% endif %}
+  {% if episode.downloads.get('epub') %}<a href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download="{{ episode.downloads['epub'].rsplit('/', 1)[-1] }}" type="application/epub+zip">EPUB ↓</a>{% endif %}
   {% endif %}
 </div>
 
