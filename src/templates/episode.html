@@ -91,6 +91,11 @@
   <p class="episode-end" aria-hidden="true">End of Episode {{ episode.episode }}</p>
 
   <div class="reader-actions">
+    <a class="btn btn-sm" href="{{ site.base_url }}/read/{{ episode.slug }}.html">📖 eReader view</a>
+    {% if episode.downloads %}
+      {% if episode.downloads.get('pdf') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>PDF ↓</a>{% endif %}
+      {% if episode.downloads.get('epub') %}<a class="btn btn-sm" href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>EPUB ↓</a>{% endif %}
+    {% endif %}
     <button class="btn btn-sm" id="mark-read" type="button">Mark episode as read</button>
   </div>
 

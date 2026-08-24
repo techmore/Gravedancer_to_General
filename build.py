@@ -335,6 +335,7 @@ def build_site():
 
     # ── episode pages ──
     ep_tmpl = env.get_template("episode.html")
+    read_tmpl = env.get_template("read.html")
     by_num = sorted(episodes, key=lambda e: e.get("episode", 0))
     for i, ep in enumerate(by_num):
         prev_ep = by_num[i - 1] if i > 0 else None
@@ -345,6 +346,14 @@ def build_site():
             nav_active=None,
         )
         write_page(DIST_DIR / "episodes" / f"{ep['slug']}.html", html_out)
+
+        # ── eReader view (continuous scroll, distraction-free) ──
+        read_out = read_tmpl.render(
+            **base_context,
+            episode=ep, prev_ep=prev_ep, next_ep=next_ep,
+            nav_active=None, page_title=f"Read: {ep['title']}",
+        )
+        write_page(DIST_DIR / "read" / f"{ep['slug']}.html", read_out)
 
     # ── about ──
     if "about" in lore:

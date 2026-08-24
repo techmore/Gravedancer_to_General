@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} · {{ site.title }}{% endblock %}
+{% block description %}{{ episode.excerpt }}{% endblock %}
+
+{% block head_extra %}
+<style>
+  /* ── eReader: continuous scroll, distraction-free ── */
+  body.ereader-mode .site-header,
+  body.ereader-mode .site-footer { display: none; }
+  body.ereader-mode { background: var(--paper, #f5f0e6); }
+  @media (prefers-color-scheme: dark) {
+    body.ereader-mode:not(.theme-light) { background: #14100c; }
+  }
+  body.ereader-mode.theme-dark { background: #14100c; }
+  body.ereader-mode.theme-sepia { background: #f5f0e6; }
+  .ereader-bar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; gap: .75rem;
+    padding: .6rem 1rem;
+    background: rgba(20, 16, 12, .85);
+    backdrop-filter: blur(8px);
+    color: #d8cfc2;
+    font-family: Inter, system-ui, sans-serif;
+    font-size: .85rem;
+  }
+  body.ereader-mode.theme-sepia .ereader-bar {
+    background: rgba(245, 240, 230, .9); color: #3a3228;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+  }
+  .ereader-bar a { color: inherit; text-decoration: none; opacity: .8; }
+  .ereader-bar a:hover { opacity: 1; }
+  .ereader-bar .spacer { flex: 1; }
+  .ereader-bar button {
+    background: none; border: 1px solid currentColor; border-radius: 6px;
+    color: inherit; cursor: pointer; font: inherit;
+    padding: .15rem .55rem; opacity: .75;
+  }
+  .ereader-bar button:hover, .ereader-bar button.active { opacity: 1; }
+  .ereader {
+    max-width: 42rem; margin: 0 auto;
+    padding: 2.5rem 1.25rem 5rem;
+    font-family: Lora, Georgia, serif;
+    line-height: 1.85;
+  }
+  body.ereader-mode.theme-sepia .ereader { color: #2b241b; }
+  body.ereader-mode.theme-dark .ereader { color: #d8cfc2; }
+  .ereader h1 { font-size: 2rem; margin: 0 0 .25rem; }
+  .ereader .er-tagline { font-style: italic; opacity: .7; margin: 0 0 2.5rem; }
+  .ereader h2 {
+    font-size: 1.35rem; margin: 3rem 0 1rem;
+    border-bottom: 1px solid currentColor; border-color: color-mix(in srgb, currentColor 25%, transparent);
+    padding-bottom: .35rem;
+  }
+  .ereader p { margin: 0 0 1.1em; text-indent: 1.4em; hyphens: auto; }
+  .ereader .day-plate { margin: 1.75rem 0; }
+  .ereader-footer {
+    max-width: 42rem; margin: 0 auto; padding: 0 1.25rem 4rem;
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-family: Inter, system-ui, sans-serif; font-size: .9rem;
+  }
+  body.ereader-mode.theme-sepia .ereader-footer a,
+  body.ereader-mode.theme-dark .ereader-footer a { color: inherit; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ereader-bar">
+  <a href="{{ site.base_url }}/episodes/{{ episode.slug }}.html">← Episode page</a>
+  <span class="spacer"></span>
+  <button type="button" data-theme="sepia">Sepia</button>
+  <button type="button" data-theme="dark">Dark</button>
+  <button type="button" data-theme="light">Light</button>
+  {% if episode.downloads %}
+  <span class="spacer"></span>
+  {% if episode.downloads.get('epub') %}<a href="{{ site.base_url }}/{{ episode.downloads['epub'] }}" download>EPUB ↓</a>{% endif %}
+  {% if episode.downloads.get('pdf') %}<a href="{{ site.base_url }}/{{ episode.downloads['pdf'] }}" download>PDF ↓</a>{% endif %}
+  {% endif %}
+</div>
+
+<article class="ereader" id="episode">
+  <h1>{{ episode.title }}</h1>
+  <p class="er-tagline">Episode {{ episode.episode }} · {{ episode.word_count | int }} words ·
+     {% if episode.tagline %}{{ episode.tagline }}{% endif %}</p>
+
+  {% for day in episode.days %}
+  <section id="day-{{ day.num }}">
+    <h2>Day {{ day.num }}: {{ day.title }}</h2>
+    {% if episode.plates and episode.plates.get(day.num) %}
+    <figure class="day-plate"><img loading="lazy" src="{{ site.base_url }}/{{ episode.plates.get(day.num) }}" alt="Scene art for Day {{ day.num }}"></figure>
+    {% endif %}
+    {{ day.html | safe }}
+  </section>
+  {% endfor %}
+</article>
+
+<nav class="ereader-footer">
+  {% if prev_ep %}<a href="{{ site.base_url }}/read/{{ prev_ep.slug }}.html">← EP{{ prev_ep.episode }}: {{ prev_ep.title }}</a>{% else %}<span></span>{% endif %}
+  {% if next_ep %}<a href="{{ site.base_url }}/read/{{ next_ep.slug }}.html">EP{{ next_ep.episode }}: {{ next_ep.title }} →</a>{% else %}<span></span>{% endif %}
+</nav>
+
+<script>
+  (function () {
+    var body = document.body;
+    body.classList.add('ereader-mode');
+    var stored = null;
+    try { stored = localStorage.getItem('ereader-theme'); } catch (e) {}
+    if (stored) body.classList.add('theme-' + stored);
+    document.querySelectorAll('.ereader-bar button[data-theme]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        body.classList.remove('theme-light', 'theme-sepia', 'theme-dark');
+        var t = btn.getAttribute('data-theme');
+        if (t !== 'light') body.classList.add('theme-' + t);
+        try { localStorage.setItem('ereader-theme', t); } catch (e) {}
+      });
+    });
+  })();
+</script>
+{% endblock %}

@@ -19,6 +19,9 @@ plates:
   4: assets/img/02-forgotten-chain/day-04.jpg
   5: assets/img/02-forgotten-chain/day-05.jpg
   6: assets/img/02-forgotten-chain/day-06.jpg
+downloads:
+  epub: assets/downloads/02-forgotten-chain/episode.epub
+  pdf: assets/downloads/02-forgotten-chain/episode.pdf
 ---
 
 ## DAY 1: Arrival on the Chain
