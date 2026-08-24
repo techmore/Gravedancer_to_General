@@ -186,17 +186,12 @@
     touchX = null;
   }, {passive: true});
 
-  // TOC: jump to the chapter whose href contains day-N
+  // TOC: our EPUBs have a flat spine (title + day-N chapters), so jump
+  // straight to the spine item by href instead of relying on parsed nav.
   var tocSel = document.getElementById('er-toc');
   if (tocSel) tocSel.addEventListener('change', function () {
-    var dayNum = tocSel.value;
-    if (!dayNum) return;
-    book.loaded.toc.then(function (toc) {
-      var target = toc.find(function (e) {
-        return (e.href || '').indexOf('day-' + parseInt(dayNum, 10) + '.xhtml') !== -1;
-      });
-      if (target) rendition.display(target.href);
-    });
+    var dayNum = parseInt(tocSel.value, 10);
+    if (!isNaN(dayNum)) rendition.display('day-' + dayNum + '.xhtml');
   });
 })();
 </script>
