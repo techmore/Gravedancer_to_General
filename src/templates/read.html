@@ -124,27 +124,44 @@
     flow: 'paginated',
   });
   window.rendition = rendition;
+  try { applyTheme(localStorage.getItem('ereader-theme') || 'sepia'); } catch (e) { applyTheme('sepia'); }
 
   var savedLocation = null;
   try { savedLocation = localStorage.getItem('er-cfi:' + location.pathname); } catch (e) {}
 
-  rendition.display(savedLocation || undefined).then(function () {
+  // Hide the loading veil as soon as anything renders — never block on
+  // heavyweight work like locations.generate().
+  function veilOff() {
     document.getElementById('er-loading').style.display = 'none';
-    applyTheme(localStorage.getItem('ereader-theme') || 'sepia');
-  });
+  }
+  rendition.on('rendered', veilOff);
+  rendition.on('relocated', veilOff);
 
-  function updateCounter() {
-    book.ready.then(function () {
-      return book.locations.generate(1600);
-    }).then(function () {
-      var pct = Math.round((book.locations.percentageFromCfi(rendition.currentLocation().start.cfi) || 0) * 100);
-      counter.textContent = pct + '%';
-    }).catch(function () {});
+  rendition.display(savedLocation || undefined).then(veilOff);
+  // Safety valve: if the book still hasn't rendered after 20s, let the
+  // user out of the splash so they can retry or leave.
+  setTimeout(function () {
+    var veil = document.getElementById('er-loading');
+    if (veil && veil.style.display !== 'none') {
+      veil.querySelector('span').textContent =
+        'Still opening… large episode, try reloading the page.';
+    }
+  }, 20000);
+
+  function updateCounter(location) {
+    // Cheap spine-based progress: which chapter of how many. Never call
+    // locations.generate() here — it parses the whole book.
+    try {
+      var total = book.spine.items.length;
+      var idx = (location && location.start && typeof location.start.index === 'number')
+        ? location.start.index : 0;
+      counter.textContent = Math.min(idx + 1, total) + ' / ' + total;
+    } catch (e) {}
   }
 
-  rendition.on('relocated', function (location) {
-    updateCounter();
-    try { localStorage.setItem('er-cfi:' + location.pathname, location.start.cfi); } catch (e) {}
+  rendition.on('relocated', function (loc) {
+    updateCounter(loc);
+    try { localStorage.setItem('er-cfi:' + location.pathname, loc.start.cfi); } catch (e) {}
   });
 
   function prev() { rendition.prev(); }
